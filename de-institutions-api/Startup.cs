@@ -27,8 +27,8 @@ namespace de_institutions_api
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Pointer NI Addresses API",
-                    Description = "A simple address lookup for Northern Ireland addresses. Search by Post Code",
+                    Title = "NI school institutions API",
+                    Description = "A simple api for Northern Ireland schools and institutions.",
                     Contact = new OpenApiContact
                     {
                         Name = "Michael Stevenson",
