@@ -5,4 +5,10 @@
     <RootNamespace>de_institutions_api_core</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\" />
+    <Folder Include="Common\" />
+    <Folder Include="DTOs\" />
+  </ItemGroup>
+
 </Project>

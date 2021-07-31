@@ -5,5 +5,13 @@
     <RootNamespace>de_institutions_api</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\de-institutions-infrastructure\de-institutions-infrastructure.csproj" />
+  </ItemGroup>
+
 
 </Project>

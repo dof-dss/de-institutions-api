@@ -5,4 +5,16 @@
     <RootNamespace>de_institutions_infrastructure</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\de-institutions-api-core\de-institutions-api-core.csproj" />
+  </ItemGroup>
+
 </Project>

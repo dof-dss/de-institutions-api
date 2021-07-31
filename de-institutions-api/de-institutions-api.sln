@@ -5,9 +5,11 @@ VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "de-institutions-api", "de-institutions-api.csproj", "{97982E1C-E70D-4CF1-B14B-C4464D64ED56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "de-institutions-api-core", "..\de-institutions-api-core\de-institutions-api-core.csproj", "{F0AB0584-D7A3-4497-970F-659983B310FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "de-institutions-api-core", "..\de-institutions-api-core\de-institutions-api-core.csproj", "{F0AB0584-D7A3-4497-970F-659983B310FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "de-institutions-infrastructure", "..\de-institutions-infrastructure\de-institutions-infrastructure.csproj", "{98B37A75-4903-4977-B422-666110394910}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "de-institutions-infrastructure", "..\de-institutions-infrastructure\de-institutions-infrastructure.csproj", "{98B37A75-4903-4977-B422-666110394910}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "de-institutions-api-unit-tests", "..\de-institutions-api-unit-tests\de-institutions-api-unit-tests.csproj", "{99D4939D-A614-4DB6-AD28-62F395C4AB9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{98B37A75-4903-4977-B422-666110394910}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98B37A75-4903-4977-B422-666110394910}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98B37A75-4903-4977-B422-666110394910}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99D4939D-A614-4DB6-AD28-62F395C4AB9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99D4939D-A614-4DB6-AD28-62F395C4AB9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99D4939D-A614-4DB6-AD28-62F395C4AB9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99D4939D-A614-4DB6-AD28-62F395C4AB9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
