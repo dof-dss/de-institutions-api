@@ -10,17 +10,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Install project dependencies"
-          command: dotnet restore
-   #   - run:
-  #        name: "Run Application Tests"
-   #       command: dotnet test --collect:"XPlat Code Coverage" -v n --results-directory:test_coverage --collect:"Code Coverage"
-  build:
-    executor:
-      name: windows/default
-    steps:
-      - checkout
-      - run:
           name: "Restore project dependencies"
           command: dotnet restore
           
@@ -35,7 +24,7 @@ jobs:
           name: "Wait for approval"
           command: echo Wait
 workflows:
-  build-test-deploy-sandbox:
+  build-deploy-sandbox:
     jobs:
       - build:
           filters:
@@ -55,7 +44,7 @@ workflows:
           space: sandbox
           context: govuk-paas-sandbox
           manifest: manifest.yml
-  build-test-deploy-staging:
+  build-deploy-staging:
     jobs:
       - build:
           filters: # selected tags and no branches
@@ -87,3 +76,30 @@ workflows:
           space: staging
           context: govuk-paas-staging
           manifest: stagingManifest.yml
+  build-deploy-prod:
+    jobs:
+      - build:
+          filters:    # selected tags and no branches
+            tags:
+              only: /^v(0|[0-9]\d*)\.(0|[0-9]\d*)\.(0|[0-9]\d*)(?:-(beta|prod))?$/
+            branches:
+              ignore: /.*/
+      - hold:
+          type: approval
+          requires:
+          - build
+          filters:    # selected tags and no branches
+            tags:
+              only: /^v(0|[0-9]\d*)\.(0|[0-9]\d*)\.(0|[0-9]\d*)(?:-(beta|prod))?$/
+      - cloudfoundry/push:
+          appname: de-institutions-api-production
+          requires: 
+            - hold
+          filters:    # selected tags and no branches
+            tags:
+              only: /^v(0|[0-9]\d*)\.(0|[0-9]\d*)\.(0|[0-9]\d*)(?:-(beta|prod))?$/
+          org: DOF-DSS
+          endpoint: https://api.london.cloud.service.gov.uk
+          space: production
+          context: govuk-paas-production
+          manifest: productionManifest.yml
