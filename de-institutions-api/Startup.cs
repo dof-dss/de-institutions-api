@@ -1,10 +1,18 @@
+using de_institutions_infrastructure.Data;
+using de_institutions_infrastructure.Features.Institution.Validation;
+using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
+using Steeltoe.Extensions.Configuration.CloudFoundry;
 using System;
+using System.Reflection;
 
 namespace de_institutions_api
 {
@@ -16,10 +24,16 @@ namespace de_institutions_api
         }
 
         public IConfiguration Configuration { get; }
+        protected CloudFoundryServicesOptions CloudFoundryServicesOptions;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.ConfigureCloudFoundryOptions(Configuration);
+            CloudFoundryServicesOptions = Configuration.GetSection("vcap").Get<CloudFoundryServicesOptions>();
+
+
+
             services.AddApiVersioning(
             options =>
             {
@@ -33,6 +47,9 @@ namespace de_institutions_api
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
             });
+
+
+            // de-institutions-api-mysql
 
             services.AddSwaggerGen(c =>
             {
@@ -76,7 +93,13 @@ namespace de_institutions_api
 
             });
 
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GetAllInstitutionsQueryValidator>());
+
+            // Add database
+            services.AddDbContext<InstituitonContext>(options => options.UseMySql(Configuration));
+
+            services.AddAutoMapper(typeof(Startup).GetTypeInfo().Assembly, typeof(InstituitonContext).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly, typeof(InstituitonContext).GetTypeInfo().Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,6 +119,13 @@ namespace de_institutions_api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            // Run migrations
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var institutionContext = serviceScope.ServiceProvider.GetService<InstituitonContext>();
+                institutionContext.Database.Migrate();
             }
 
             app.UseHttpsRedirection();
