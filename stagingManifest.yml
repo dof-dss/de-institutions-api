@@ -1,0 +1,8 @@
+---
+applications:
+- name: de-institutions-api-staging
+  buildpacks:
+  - dotnet_core_buildpack
+  memory: 256M
+  services:
+  - de-institutions-api-mysql

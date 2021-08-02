@@ -43,11 +43,5 @@ namespace de_institutions_api.Controllers
         //public void Post([FromBody] string value)
         //{
         //}
-
-        //// PUT api/<InstituitonController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
     }
 }
