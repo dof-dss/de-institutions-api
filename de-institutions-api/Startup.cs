@@ -32,8 +32,6 @@ namespace de_institutions_api
             services.ConfigureCloudFoundryOptions(Configuration);
             CloudFoundryServicesOptions = Configuration.GetSection("vcap").Get<CloudFoundryServicesOptions>();
 
-
-
             services.AddApiVersioning(
             options =>
             {
@@ -47,9 +45,6 @@ namespace de_institutions_api
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
             });
-
-
-            // de-institutions-api-mysql
 
             services.AddSwaggerGen(c =>
             {
