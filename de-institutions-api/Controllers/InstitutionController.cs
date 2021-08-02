@@ -31,17 +31,18 @@ namespace de_institutions_api.Controllers
             return Ok(result.Value);
         }
 
-        //[HttpGet("{refNumber}")]
-        //[Produces("application/json")]
-        //public string Get(string refNumber)
-        //{
-        //    return "value";
-        //}
+        [HttpGet("GetByReferenceNumber", Name = "GetBy")]
+        [Produces("application/json")]
+        public async Task<ActionResult> GetAsync(string refNumber)
+        {
+            var result = await _mediator.Send(new GetInstitutionByRefQuery() { InstitutionReference = refNumber });
 
-        //// POST api/<InstituitonController>
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
+            if (result.IsFailure)
+            {
+                return NotFound(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
     }
 }
