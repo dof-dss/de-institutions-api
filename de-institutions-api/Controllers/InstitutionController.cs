@@ -31,12 +31,12 @@ namespace de_institutions_api.Controllers
             return Ok(result.Value);
         }
 
-        [HttpGet("{refNumber}")]
-        [Produces("application/json")]
-        public string Get(string refNumber)
-        {
-            return "value";
-        }
+        //[HttpGet("{refNumber}")]
+        //[Produces("application/json")]
+        //public string Get(string refNumber)
+        //{
+        //    return "value";
+        //}
 
         //// POST api/<InstituitonController>
         //[HttpPost]

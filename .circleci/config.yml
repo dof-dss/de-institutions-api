@@ -1,0 +1,89 @@
+version: 2.1
+orbs:
+  windows: circleci/windows@2.2.0
+  cloudfoundry: circleci/cloudfoundry@0.1.73
+
+jobs:
+  build:
+    executor:
+      name: windows/default
+    steps:
+      - checkout
+      - run:
+          name: "Install project dependencies"
+          command: dotnet restore
+   #   - run:
+  #        name: "Run Application Tests"
+   #       command: dotnet test --collect:"XPlat Code Coverage" -v n --results-directory:test_coverage --collect:"Code Coverage"
+  build:
+    executor:
+      name: windows/default
+    steps:
+      - checkout
+      - run:
+          name: "Restore project dependencies"
+          command: dotnet restore
+          
+      - run:
+          name: "Build Application"
+          command: dotnet build
+  hold:
+    executor:
+      name: windows/default
+    steps:
+      - run:
+          name: "Wait for approval"
+          command: echo Wait
+workflows:
+  build-test-deploy-sandbox:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+      - cloudfoundry/push:
+          filters:
+            branches:
+              only:
+                - main
+          appname: de-institutions-api-sandbox
+          requires:
+            - build
+          org: DOF-DSS
+          endpoint: https://api.london.cloud.service.gov.uk
+          space: sandbox
+          context: govuk-paas-sandbox
+          manifest: manifest.yml
+  build-test-deploy-staging:
+    jobs:
+      - build:
+          filters: # selected tags and no branches
+            tags:
+              only: /^v(0|[0-9]\d*)\.(0|[0-9]\d*)\.(0|[0-9]\d*)(?:-(alpha|beta))?$/
+            branches:
+              ignore: /.*/
+      - hold: 
+          type: approval
+          requires:
+          - build
+          filters: 
+            tags:
+              only: /^v(0|[0-9]\d*)\.(0|[0-9]\d*)\.(0|[0-9]\d*)(?:-(alpha|beta))?$/
+      - cloudfoundry/push:
+          requires:
+            - hold
+          filters:
+            tags:
+              only: /^v(0|[0-9]\d*)\.(0|[0-9]\d*)\.(0|[0-9]\d*)(?:-(alpha|beta))?$/
+           # branches:
+           #   only:
+            #    - main
+          appname: de-institutions-api-staging
+          #requires: 
+           # - build
+          org: DOF-DSS
+          endpoint: https://api.london.cloud.service.gov.uk
+          space: staging
+          context: govuk-paas-staging
+          manifest: stagingManifest.yml
