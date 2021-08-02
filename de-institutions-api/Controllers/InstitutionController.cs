@@ -33,7 +33,7 @@ namespace de_institutions_api.Controllers
 
         [HttpGet("GetByReferenceNumber", Name = "GetBy")]
         [Produces("application/json")]
-        public async Task<ActionResult> GetAsync(string refNumber)
+        public async Task<ActionResult> GetByReference(string refNumber)
         {
             var result = await _mediator.Send(new GetInstitutionByRefQuery() { InstitutionReference = refNumber });
 
