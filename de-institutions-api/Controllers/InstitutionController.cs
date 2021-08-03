@@ -44,5 +44,19 @@ namespace de_institutions_api.Controllers
 
             return Ok(result.Value);
         }
+
+        [HttpGet("SearchByName", Name = "GetByName")]
+        [Produces("application/json")]
+        public async Task<ActionResult> GetByName(string name)
+        {
+            var result = await _mediator.Send(new GetInstitutionByNameQuery() { Name = name });
+
+            if (result.IsFailure)
+            {
+                return NotFound(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
     }
 }
