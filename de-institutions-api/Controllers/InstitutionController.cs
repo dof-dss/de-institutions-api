@@ -33,9 +33,23 @@ namespace de_institutions_api.Controllers
 
         [HttpGet("GetByReferenceNumber", Name = "GetBy")]
         [Produces("application/json")]
-        public async Task<ActionResult> GetAsync(string refNumber)
+        public async Task<ActionResult> GetByReference(string refNumber)
         {
             var result = await _mediator.Send(new GetInstitutionByRefQuery() { InstitutionReference = refNumber });
+
+            if (result.IsFailure)
+            {
+                return NotFound(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+
+        [HttpGet("SearchByName", Name = "GetByName")]
+        [Produces("application/json")]
+        public async Task<ActionResult> GetByName(string name)
+        {
+            var result = await _mediator.Send(new GetInstitutionByNameQuery() { Name = name });
 
             if (result.IsFailure)
             {
