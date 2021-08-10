@@ -6,3 +6,4 @@ applications:
   memory: 256M
   services:
   - de-institutions-api-mysql
+  - de-institutions-api-redis
