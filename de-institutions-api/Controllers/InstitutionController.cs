@@ -72,5 +72,19 @@ namespace de_institutions_api.Controllers
 
             return Ok(result.Value);
         }
+
+        [HttpGet("GetSchoolByReferenceNumber")]
+        [Produces("application/json")]
+        public async Task<ActionResult> GetSchoolByReference(string refNumber)
+        {
+            var result = await _mediator.Send(new GetSchoolByReferenceQuery() { InstitutionReference = refNumber });
+
+            if (result.IsFailure)
+            {
+                return NotFound(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
     }
 }

@@ -35,11 +35,11 @@ namespace de_institutions_infrastructure.Features.Institution.Queries
                 return Result.Fail<List<InstitutionDto>>(validationResult.ToString());
 
             var maybeInstitution = InstituitonContext.Institution.AsNoTracking()
-                .Where(a => a.Name.Contains(request.Name) && a.InstitutionType == "Primary school" ||
-                a.InstitutionType == "Prepatory Schools"
+                .Where(a => a.Name.Contains(request.Name) && (a.InstitutionType == "Primary school" ||
+                a.InstitutionType == "Preparatory Schools"
                 || a.InstitutionType == "Secondary (non-grammar) school"
                 || a.InstitutionType == "Secondary (grammar) school"
-                || a.InstitutionType == "Special school")
+                || a.InstitutionType == "Special school"))
                 .Include(a => a.Address)
                 .ToMaybe();
 
