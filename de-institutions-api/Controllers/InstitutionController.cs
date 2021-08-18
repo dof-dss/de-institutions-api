@@ -17,7 +17,7 @@ namespace de_institutions_api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("GetAll/", Name = "Get")]
+        [HttpGet("GetAll/")]
         [Produces("application/json")]
         public async Task<ActionResult> GetAll()
         {
@@ -31,7 +31,7 @@ namespace de_institutions_api.Controllers
             return Ok(result.Value);
         }
 
-        [HttpGet("GetByReferenceNumber", Name = "GetBy")]
+        [HttpGet("GetByReferenceNumber")]
         [Produces("application/json")]
         public async Task<ActionResult> GetByReference(string refNumber)
         {
@@ -45,11 +45,25 @@ namespace de_institutions_api.Controllers
             return Ok(result.Value);
         }
 
-        [HttpGet("SearchByName", Name = "GetByName")]
+        [HttpGet("SearchByName")]
         [Produces("application/json")]
         public async Task<ActionResult> GetByName(string name)
         {
             var result = await _mediator.Send(new GetInstitutionByNameQuery() { Name = name });
+
+            if (result.IsFailure)
+            {
+                return NotFound(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+
+        [HttpGet("SearchSchoolByName")]
+        [Produces("application/json")]
+        public async Task<ActionResult> GetSchoolByName(string name)
+        {
+            var result = await _mediator.Send(new GetSchoolByNameQuery() { Name = name });
 
             if (result.IsFailure)
             {
