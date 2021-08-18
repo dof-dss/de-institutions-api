@@ -1,4 +1,5 @@
 using de_institutions_infrastructure.Data;
+using de_institutions_infrastructure.Features.Common;
 using de_institutions_infrastructure.Features.Institution.Validation;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
 using Steeltoe.Extensions.Configuration.CloudFoundry;
-using System;
 using System.Reflection;
 
 namespace de_institutions_api
@@ -56,36 +56,9 @@ namespace de_institutions_api
                     Contact = new OpenApiContact
                     {
                         Name = "Michael Stevenson",
-                        Email = "Michael.Stevenson@finance-ni.gov.uk",
-                        Url = new Uri("https://www.micstevenson.co.uk/"),
+                        Email = "Michael.Stevenson@finance-ni.gov.uk"
                     }
                 });
-
-                //c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                //{
-                //    Name = "Authorization",
-                //    Type = SecuritySchemeType.ApiKey,
-                //    Scheme = "Bearer",
-                //    BearerFormat = "JWT",
-                //    In = ParameterLocation.Header,
-                //    Description = "JWT Authorization header using the Bearer scheme."
-                //});
-
-                //c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                // {
-                //     {
-                //           new OpenApiSecurityScheme
-                //             {
-                //                 Reference = new OpenApiReference
-                //                 {
-                //                     Type = ReferenceType.SecurityScheme,
-                //                     Id = "Bearer"
-                //                 }
-                //             },
-                //             new string[] {}
-                //     }
-                // });
-
             });
 
             services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GetAllInstitutionsQueryValidator>());
@@ -95,6 +68,8 @@ namespace de_institutions_api
 
             services.AddAutoMapper(typeof(Startup).GetTypeInfo().Assembly, typeof(InstituitonContext).GetTypeInfo().Assembly);
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly, typeof(InstituitonContext).GetTypeInfo().Assembly);
+
+            services.AddSingleton<IUriService, UriService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
