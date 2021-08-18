@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using de_institutions_api_core.DTOs;
+using de_institutions_infrastructure.Features.Common;
+using de_institutions_infrastructure.Features.Institution.Queries;
 
 namespace de_institutions_infrastructure.Features.Institution.Mapping
 {
@@ -14,6 +16,8 @@ namespace de_institutions_infrastructure.Features.Institution.Mapping
             CreateMap<de_institutions_api_core.Entities.Institution, InstitutionDto>()
                 .ForMember(d => d.Address, o => o.MapFrom(s => s.Address))
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+            CreateMap<GetAllQuery, PaginationDetails>();
         }
     }
 }

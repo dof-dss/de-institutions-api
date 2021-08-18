@@ -1,4 +1,5 @@
 ﻿using de_institutions_infrastructure.Features.Institution.Queries;
+using dss_common.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,23 +18,17 @@ namespace de_institutions_api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("GetAll/")]
+        [HttpGet("GetAll")]
         [Produces("application/json")]
-        public async Task<ActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] GetAllQuery request)
         {
-            var result = await _mediator.Send(new GetAllInstitutionsQuery());
-
-            if (result.IsFailure)
-            {
-                return NotFound(result.Error);
-            }
-
-            return Ok(result.Value);
+            var result = await _mediator.Send(request).ConfigureAwait(false);
+            return result.OnBoth(r => r.IsSuccess ? (IActionResult)Ok(r.Value) : NotFound(r.Error));
         }
 
         [HttpGet("GetByReferenceNumber")]
         [Produces("application/json")]
-        public async Task<ActionResult> GetByReference(string refNumber)
+        public async Task<IActionResult> GetByReference(string refNumber)
         {
             var result = await _mediator.Send(new GetInstitutionByRefQuery() { InstitutionReference = refNumber });
 
@@ -47,7 +42,7 @@ namespace de_institutions_api.Controllers
 
         [HttpGet("SearchByName")]
         [Produces("application/json")]
-        public async Task<ActionResult> GetByName(string name)
+        public async Task<IActionResult> GetByName(string name)
         {
             var result = await _mediator.Send(new GetInstitutionByNameQuery() { Name = name });
 
@@ -61,7 +56,7 @@ namespace de_institutions_api.Controllers
 
         [HttpGet("SearchSchoolByName")]
         [Produces("application/json")]
-        public async Task<ActionResult> GetSchoolByName(string name)
+        public async Task<IActionResult> GetSchoolByName(string name)
         {
             var result = await _mediator.Send(new GetSchoolByNameQuery() { Name = name });
 
@@ -75,7 +70,7 @@ namespace de_institutions_api.Controllers
 
         [HttpGet("GetSchoolByReferenceNumber")]
         [Produces("application/json")]
-        public async Task<ActionResult> GetSchoolByReference(string refNumber)
+        public async Task<IActionResult> GetSchoolByReference(string refNumber)
         {
             var result = await _mediator.Send(new GetSchoolByReferenceQuery() { InstitutionReference = refNumber });
 
