@@ -77,7 +77,7 @@ namespace de_institutions_api.Controllers
         [Produces("application/json")]
         public async Task<ActionResult> GetSchoolByReference(string refNumber)
         {
-            var result = await _mediator.Send(new GetInstitutionByRefQuery() { InstitutionReference = refNumber });
+            var result = await _mediator.Send(new GetSchoolByReferenceQuery() { InstitutionReference = refNumber });
 
             if (result.IsFailure)
             {
