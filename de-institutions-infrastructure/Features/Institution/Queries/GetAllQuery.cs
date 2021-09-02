@@ -51,11 +51,11 @@ namespace de_institutions_infrastructure.Features.Institution.Queries
         {
             var pagination = _mapper.Map<PaginationDetails>(request).WithTotal(_instituitonContext.Institution.Count());
 
-            var audits = _mapper.ProjectTo<InstitutionDto>(_instituitonContext.Institution.Include(a => a.Address)).OrderBy(a => a.Name)
+            var schools = _mapper.ProjectTo<InstitutionDto>(_instituitonContext.Institution.Include(a => a.Address)).OrderBy(a => a.Name)
                 .Skip(pagination.PreviousPageNumber * pagination.PageSize)
                 .Take(request.PageSize).ToList();
 
-            var paginationResponse = PagedResult<InstitutionDto>.CreatePaginatedResponse(_uriService, pagination, audits);
+            var paginationResponse = PagedResult<InstitutionDto>.CreatePaginatedResponse(_uriService, pagination, schools);
 
             return Result.Ok(paginationResponse);
         }
