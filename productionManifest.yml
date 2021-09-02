@@ -1,6 +1,6 @@
 ---
 applications:
-- name: de-institutions-api-sandbox
+- name: de-institutions-api-production
   buildpacks:
   - dotnet_core_buildpack
   memory: 256M
