@@ -1,6 +1,7 @@
 ﻿using de_institutions_infrastructure.Features.Institution.Queries;
 using dss_common.Extensions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace de_institutions_api.Controllers
     [ApiVersion("1.0")]
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize]
     public class InstitutionController : ControllerBase
     {
         private readonly IMediator _mediator;
