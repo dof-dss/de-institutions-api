@@ -6,6 +6,9 @@
 # de-institutions-api
 Api to provide details of institutions and schools in Northern Ireland
 
+# Access
+You will need to contact the team to get an api key and secret to allow your application to consume this api.
+
 ## Contents of this file
 
 - [Contributing](#contributing)
@@ -37,7 +40,7 @@ This solves having to create a school table in every single application and addi
 
 ### How did we do it?
 
-This is a dotnet core application which uses Mysql to store the pointer data, Entity Framework for data access and JWT to authenticate applications to allow them to use the api.
+This is a dotnet core application which uses Mysql to store the school data, Entity Framework for data access and JWT to authenticate applications to allow them to use the api.
 We have hosted this in the Gov UK PaaS Cloud foundry platform using Circle CI to deploy. This uses Swagger as a handy UI.
 
 ### Future plans
@@ -51,4 +54,26 @@ To run the databases you need mysql installed. Then run the below commands to se
 - update-database
 
 Restore the nuget package. Then to build run "dotnet build" in command line then dotnet run to run the site.
+
+### Endpoints
+
+GETS
+
+/api/v1/Institution/GetAll - This gets all the institutions by using paging so you can select how many pages and per page you want
+
+/api/v1/Institution/GetByReferenceNumber - Gets institution by its reference number
+
+/api/v1/Institution/SearchByName - Gets Institution by name
+
+/api/v1/Institution/SearchSchoolByName - Gets School (primary, post primary, grammar etc) by name
+
+/api/v1/Institution/GetSchoolByReferenceNumber - Gets school (primary, post primary, grammar etc) by reference number
+
+POST - TBA
+
+PUT - TBA
+
+DELETE - TBA
+
+
 
