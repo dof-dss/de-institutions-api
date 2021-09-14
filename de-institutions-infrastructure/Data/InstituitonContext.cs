@@ -11,6 +11,6 @@ namespace de_institutions_infrastructure.Data
         }
 
         public DbSet<Institution> Institution { get; set; }
-
+        public DbSet<ConsumingApplication> ConsumingApplication { get; set; }
     }
 }

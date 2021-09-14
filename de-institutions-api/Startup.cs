@@ -1,8 +1,10 @@
+using de_institutions_api.Authentication;
 using de_institutions_infrastructure.Data;
 using de_institutions_infrastructure.Features.Common;
 using de_institutions_infrastructure.Features.Institution.Validation;
 using FluentValidation.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Steeltoe.CloudFoundry.Connector.MySql.EFCore;
 using Steeltoe.Extensions.Configuration.CloudFoundry;
+using System;
 using System.Reflection;
 
 namespace de_institutions_api
@@ -25,6 +28,7 @@ namespace de_institutions_api
 
         public IConfiguration Configuration { get; }
         protected CloudFoundryServicesOptions CloudFoundryServicesOptions;
+        private JwtHelpers _jwtHelpers;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -59,6 +63,31 @@ namespace de_institutions_api
                         Email = "Michael.Stevenson@finance-ni.gov.uk"
                     }
                 });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme."
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                 {
+                     {
+                           new OpenApiSecurityScheme
+                             {
+                                 Reference = new OpenApiReference
+                                 {
+                                     Type = ReferenceType.SecurityScheme,
+                                     Id = "Bearer"
+                                 }
+                             },
+                             new string[] {}
+                     }
+                 });
             });
 
             services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GetAllInstitutionsQueryValidator>());
@@ -70,11 +99,34 @@ namespace de_institutions_api
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly, typeof(InstituitonContext).GetTypeInfo().Assembly);
 
             services.AddSingleton<IUriService, UriService>();
+
+            services.AddTransient<JwtHelpers>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }
+            ).AddJwtBearer(o =>
+            {
+                o.RequireHttpsMetadata = true;
+                o.TokenValidationParameters.RequireSignedTokens = true;
+                o.TokenValidationParameters.ValidateAudience = false;
+                o.TokenValidationParameters.ValidateIssuer = false;
+                o.TokenValidationParameters.RequireExpirationTime = false;
+                o.TokenValidationParameters.ValidateIssuerSigningKey = true;
+                o.TokenValidationParameters.IssuerSigningKeyResolver = _jwtHelpers.ResolveSigningKey;
+                o.TokenValidationParameters.ValidateLifetime = true;
+                o.TokenValidationParameters.LifetimeValidator = _jwtHelpers.LifetimeValidator;
+                o.Validate();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider services)
         {
+            _jwtHelpers = services.GetRequiredService<JwtHelpers>();
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
