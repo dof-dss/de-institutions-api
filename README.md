@@ -9,6 +9,11 @@ Api to provide details of institutions and schools in Northern Ireland
 # Access
 You will need to contact the team to get an api key and secret to allow your application to consume this api.
 
+# Diagram
+
+![SchoolsApi](https://user-images.githubusercontent.com/66303816/133382429-c7a8f3df-5b13-497b-9988-cffcdcd0d077.jpg)
+
+
 ## Contents of this file
 
 - [Contributing](#contributing)
